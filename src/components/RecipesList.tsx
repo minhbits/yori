@@ -1,7 +1,8 @@
 import React from 'react';
 import useRecipes from '../hooks/useRecipes';
+import Recipe from './Recipe';
 
-type Recipe = {
+type RecipeType = {
   id: number;
   type: 'recipes';
   attributes: {
@@ -16,10 +17,12 @@ export default function RecipesList() {
     <div>
       <div>Recipes List</div>
       <ul>
-        {recipes?.map((recipe: Recipe) => (
+        {recipes?.map((recipe: RecipeType) => (
           <li key={recipe.id}>{recipe.attributes.title}</li>
         ))}
       </ul>
+      <div>Recipe Show</div>
+      <Recipe />
     </div>
   );
 }
