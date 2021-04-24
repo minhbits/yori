@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 1,
+    'no-nested-ternary': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',
