@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useCreateRecipe from '../hooks/useCreateRecipe';
 import useRecipes from '../hooks/useRecipes';
+import useDeleteRecipe from '../hooks/useDeleteRecipe';
 import Recipe from './Recipe';
 
 type RecipeType = {
@@ -24,10 +25,27 @@ export default function RecipesList() {
     setValues((old) => ({ ...old, [field]: value }));
   };
 
-  const { mutate: createRecipe, status } = useCreateRecipe();
+  const {
+    mutate: createRecipe,
+    status: createRecipeStatus,
+  } = useCreateRecipe();
 
   const onSubmit = () => {
     createRecipe(values);
+  };
+
+  const {
+    mutate: deleteRecipe,
+    status: deleteRecipeStatus,
+  } = useDeleteRecipe();
+
+  const [activeRecipeId, setActiveRecipeId] = useState<number | null>(null);
+
+  console.log('activeRecipeId', activeRecipeId);
+
+  const onDeleteRecipe = (recipeid: number) => {
+    deleteRecipe(recipeid);
+    setActiveRecipeId(activeRecipeId === recipeid ? null : activeRecipeId);
   };
 
   return (
@@ -35,12 +53,34 @@ export default function RecipesList() {
       <div>Recipes List</div>
       <ul>
         {recipes?.map((recipe: RecipeType) => (
-          <li key={recipe.id}>{recipe.attributes.title}</li>
+          <li key={recipe.id}>
+            <div>
+              <input
+                type="checkbox"
+                id={`${recipe.id}`}
+                onChange={() =>
+                  setActiveRecipeId(
+                    activeRecipeId === recipe.id ? null : recipe.id,
+                  )
+                }
+                checked={activeRecipeId === recipe.id}
+              />
+              {recipe.attributes.title}
+              <button
+                type="button"
+                onClick={() => {
+                  onDeleteRecipe(recipe.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
         ))}
       </ul>
       <br />
       <div>Recipe Show</div>
-      <Recipe />
+      {activeRecipeId && <Recipe activeRecipeId={activeRecipeId} />}
       <br />
       <div>Create Recipe</div>
       <div>
@@ -50,11 +90,11 @@ export default function RecipesList() {
             onChange={(e) => setValue('title', e.target.value)}
           />
           <button type="submit">
-            {status === 'loading'
+            {createRecipeStatus === 'loading'
               ? 'Saving...'
-              : status === 'error'
+              : createRecipeStatus === 'error'
               ? 'Error!'
-              : status === 'success'
+              : createRecipeStatus === 'success'
               ? 'Saved!'
               : 'Create Recipe'}
           </button>
