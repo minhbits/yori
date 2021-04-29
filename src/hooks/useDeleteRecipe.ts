@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 
 type RecipeType = {
-  id: number;
+  id: string;
   type: 'recipes';
   attributes: {
     title: string;
@@ -12,12 +12,11 @@ type RecipeType = {
 export default function useDeleteRecipe() {
   const queryClient = useQueryClient();
 
-  return useMutation<AxiosResponse<RecipeType>, void, number>(
+  return useMutation<AxiosResponse<RecipeType>, void, string>(
     (recipeId) => axios.delete(`/recipes/${recipeId}`),
     {
-      onSuccess: (recipeId) => {
+      onSuccess: () => {
         queryClient.invalidateQueries('recipes');
-        queryClient.invalidateQueries(`recipes/${recipeId}`);
       },
     },
   );

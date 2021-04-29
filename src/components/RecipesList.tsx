@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useCreateRecipe from '../hooks/useCreateRecipe';
 import useRecipes from '../hooks/useRecipes';
 import useDeleteRecipe from '../hooks/useDeleteRecipe';
-import Recipe from './Recipe';
 
 type RecipeType = {
-  id: number;
+  id: string;
   type: 'recipes';
   attributes: {
     title: string;
@@ -34,54 +34,30 @@ export default function RecipesList() {
     createRecipe(values);
   };
 
-  const {
-    mutate: deleteRecipe,
-    status: deleteRecipeStatus,
-  } = useDeleteRecipe();
+  const { mutate: deleteRecipe } = useDeleteRecipe();
 
-  const [activeRecipeId, setActiveRecipeId] = useState<number | null>(null);
-
-  console.log('activeRecipeId', activeRecipeId);
-
-  const onDeleteRecipe = (recipeid: number) => {
+  const onDeleteRecipe = (recipeid: string) => {
     deleteRecipe(recipeid);
-    setActiveRecipeId(activeRecipeId === recipeid ? null : activeRecipeId);
   };
 
   return (
     <div>
-      <div>Recipes List</div>
-      <ul>
-        {recipes?.map((recipe: RecipeType) => (
-          <li key={recipe.id}>
-            <div>
-              <input
-                type="checkbox"
-                id={`${recipe.id}`}
-                onChange={() =>
-                  setActiveRecipeId(
-                    activeRecipeId === recipe.id ? null : recipe.id,
-                  )
-                }
-                checked={activeRecipeId === recipe.id}
-              />
-              {recipe.attributes.title}
-              <button
-                type="button"
-                onClick={() => {
-                  onDeleteRecipe(recipe.id);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <br />
-      <div>Recipe Show</div>
-      {activeRecipeId && <Recipe activeRecipeId={activeRecipeId} />}
-      <br />
+      <h5>Recipes List</h5>
+      {recipes?.map((recipe: RecipeType) => (
+        <div key={recipe.id} style={{ display: 'flex' }}>
+          <Link to={`/recipes/${recipe.id}`}>
+            <div>{recipe.attributes.title}</div>
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              onDeleteRecipe(recipe.id);
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      ))}
       <div>Create Recipe</div>
       <div>
         <form onSubmit={onSubmit}>

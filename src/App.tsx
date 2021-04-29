@@ -1,13 +1,22 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import RecipesList from './components/RecipesList';
+import Recipe from './components/Recipe';
 import './App.css';
 
-const queryClient = new QueryClient();
 export default function App() {
+  const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <RecipesList />
+      <BrowserRouter>
+        <Switch>
+          <Route path="/recipes/:recipeId" render={() => <Recipe />} />
+          <Route path="/recipes" render={() => <RecipesList />} />
+          <Route path="/" render={() => <RecipesList />} />
+        </Switch>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }
