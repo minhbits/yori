@@ -1,18 +1,22 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-
-type CreateRecipeRequest = {
-  title: string;
-};
+import RecipeTypes from '../global';
 
 export default function useCreateRecipe() {
   const queryClient = useQueryClient();
 
-  return useMutation<void, void, CreateRecipeRequest>(
+  return useMutation<
+    AxiosResponse<RecipeTypes.Recipe>,
+    void,
+    RecipeTypes.CreateRecipeRequest,
+    RecipeTypes.Recipe
+  >(
     (recipeData) =>
-      axios.post('/recipes', {
-        data: { attributes: recipeData },
-      }),
+      axios
+        .post('/recipes', {
+          data: { attributes: recipeData },
+        })
+        .then((res) => res.data.data),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('recipes');

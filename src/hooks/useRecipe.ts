@@ -1,20 +1,10 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
-
-type RecipeType = {
-  id: string;
-  type: 'recipes';
-  attributes: {
-    title: string;
-  };
-};
-
-export const fetchRecipe = (recipeId: string) =>
-  axios.get(`/recipes/${recipeId}`).then((res) => res.data.data);
+import RecipeTypes from '../global';
 
 export default function useRecipe(recipeId: string) {
-  return useQuery<any, any, RecipeType, any>(
+  return useQuery<string, void, RecipeTypes.Recipe, '' | string[]>(
     recipeId && ['recipe', recipeId],
-    () => fetchRecipe(recipeId),
+    () => axios.get(`/recipes/${recipeId}`).then((res) => res.data.data),
   );
 }

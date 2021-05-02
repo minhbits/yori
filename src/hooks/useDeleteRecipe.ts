@@ -1,19 +1,18 @@
 import axios, { AxiosResponse } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-
-type RecipeType = {
-  id: string;
-  type: 'recipes';
-  attributes: {
-    title: string;
-  };
-};
+import RecipeTypes from '../global';
 
 export default function useDeleteRecipe() {
   const queryClient = useQueryClient();
 
-  return useMutation<AxiosResponse<RecipeType>, void, string>(
-    (recipeId) => axios.delete(`/recipes/${recipeId}`),
+  return useMutation<
+    AxiosResponse<RecipeTypes.Recipe>,
+    void,
+    RecipeTypes.DeleteRecipeRequest,
+    RecipeTypes.Recipe
+  >(
+    (recipeId) =>
+      axios.delete(`/recipes/${recipeId}`).then((res) => res.data.data),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('recipes');
