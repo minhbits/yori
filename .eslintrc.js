@@ -18,18 +18,23 @@ module.exports = {
     semi: ['error', 'always'],
     quotes: ['error', 'single'],
     'no-console': 1,
-    'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.ts'] }],
+    'react/jsx-filename-extension': [
+      1,
+      { extensions: ['.d.ts', '.tsx', '.ts'] },
+    ],
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 1,
     'no-nested-ternary': 'off',
+    'import/no-unresolved': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',
       {
         ts: 'never',
         tsx: 'never',
+        '.d.ts': 'never',
       },
     ],
     'object-curly-newline': 'off',
@@ -37,7 +42,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.ts', '.tsx'],
+        extensions: ['.d.ts', '.ts', '.tsx'],
       },
     },
   },

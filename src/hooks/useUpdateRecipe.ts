@@ -1,25 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-
-type RecipeType = {
-  id: string;
-  type: 'recipes';
-  attributes: {
-    title: string;
-  };
-};
-
-type UpdateRecipeRequest = {
-  recipeId: string;
-  recipeData: {
-    title: string;
-  };
-};
+import RecipeTypes from '../global';
 
 export default function useUpdateRecipe() {
   const queryClient = useQueryClient();
 
-  return useMutation<AxiosResponse<RecipeType>, void, UpdateRecipeRequest>(
+  return useMutation<
+    AxiosResponse<RecipeTypes.Recipe>,
+    void,
+    RecipeTypes.UpdateRecipeRequest
+  >(
     ({ recipeId, recipeData }) =>
       axios
         .put(`/recipes/${recipeId}`, { data: { attributes: recipeData } })

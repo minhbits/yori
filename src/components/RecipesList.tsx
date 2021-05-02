@@ -3,14 +3,8 @@ import { Link } from 'react-router-dom';
 import useCreateRecipe from '../hooks/useCreateRecipe';
 import useRecipes from '../hooks/useRecipes';
 import useDeleteRecipe from '../hooks/useDeleteRecipe';
-
-type RecipeType = {
-  id: string;
-  type: 'recipes';
-  attributes: {
-    title: string;
-  };
-};
+import RecipeForm from './RecipeForm';
+import RecipeTypes from '../global';
 
 export default function RecipesList() {
   const { data: recipes } = useRecipes();
@@ -30,7 +24,7 @@ export default function RecipesList() {
     status: createRecipeStatus,
   } = useCreateRecipe();
 
-  const onSubmit = () => {
+  const onCreateRecipe = () => {
     createRecipe(values);
   };
 
@@ -43,7 +37,7 @@ export default function RecipesList() {
   return (
     <div>
       <h5>Recipes List</h5>
-      {recipes?.map((recipe: RecipeType) => (
+      {recipes?.map((recipe: RecipeTypes.Recipe) => (
         <div key={recipe.id} style={{ display: 'flex' }}>
           <Link to={`/recipes/${recipe.id}`}>
             <div>{recipe.attributes.title}</div>
@@ -58,23 +52,22 @@ export default function RecipesList() {
           </button>
         </div>
       ))}
-      <div>Create Recipe</div>
       <div>
-        <form onSubmit={onSubmit}>
-          <input
-            value={values.title}
-            onChange={(e) => setValue('title', e.target.value)}
-          />
-          <button type="submit">
-            {createRecipeStatus === 'loading'
+        <RecipeForm
+          label="Create Recipe"
+          values={values}
+          onChange={setValue}
+          onSubmit={onCreateRecipe}
+          submitText={
+            createRecipeStatus === 'loading'
               ? 'Saving...'
               : createRecipeStatus === 'error'
               ? 'Error!'
               : createRecipeStatus === 'success'
               ? 'Saved!'
-              : 'Create Recipe'}
-          </button>
-        </form>
+              : 'Create Recipe'
+          }
+        />
       </div>
     </div>
   );

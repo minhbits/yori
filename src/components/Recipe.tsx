@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import useRecipe from '../hooks/useRecipe';
 import useUpdateRecipe from '../hooks/useUpdateRecipe';
+import RecipeForm from './RecipeForm';
 
 export default function Recipe() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -17,7 +18,7 @@ export default function Recipe() {
     setValues((old) => ({ ...old, [field]: value }));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValues(recipe ? recipe?.attributes : defaultValues);
   }, [getRecipeStatus]);
 
@@ -32,26 +33,21 @@ export default function Recipe() {
 
   return (
     <div>
-      <div>{`Update ${recipe?.id}`}</div>
-      <form onSubmit={onUpdateRecipe}>
-        <div>Title</div>
-        <input
-          value={values.title}
-          onChange={(e) => setValue('title', e.target.value)}
-        />
-        <button type="submit">
-          {updateRecipeStatus === 'loading'
+      <RecipeForm
+        label="Update Recipe"
+        values={values}
+        onChange={setValue}
+        onSubmit={onUpdateRecipe}
+        submitText={
+          updateRecipeStatus === 'loading'
             ? 'Updating...'
             : updateRecipeStatus === 'error'
             ? 'Error!'
             : updateRecipeStatus === 'success'
-            ? 'Saved!'
-            : 'Update Recipe'}
-        </button>
-      </form>
-      <Link to="/recipes">
-        <div>Back to Recipes</div>
-      </Link>
+            ? 'Updated!'
+            : 'Update Recipe'
+        }
+      />
     </div>
   );
 }
