@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import useCreateRecipe from '../hooks/useCreateRecipe';
-import useRecipes from '../hooks/useRecipes';
-import useDeleteRecipe from '../hooks/useDeleteRecipe';
-import RecipeForm from './RecipeForm';
-import RecipeTypes from '../global';
+import useCreateRecipe from '../../hooks/useCreateRecipe';
+import useRecipes from '../../hooks/useRecipes';
+import useDeleteRecipe from '../../hooks/useDeleteRecipe';
+import RecipeForm from '../RecipeForm';
+import RecipeTypes from '../../global';
 
 export default function RecipesList() {
   const { data: recipes } = useRecipes();
