@@ -30,8 +30,8 @@ export default function RecipesList() {
 
   const { mutate: deleteRecipe } = useDeleteRecipe();
 
-  const onDeleteRecipe = (recipeid: string) => {
-    deleteRecipe(recipeid);
+  const onDeleteRecipe = (recipeId: string) => {
+    deleteRecipe(recipeId);
   };
 
   return (

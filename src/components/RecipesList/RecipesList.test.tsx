@@ -1,16 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
 import RecipesList from './RecipesList';
 
 describe('RecipesList', () => {
   let queryClient: QueryClient;
-  let queryCache: QueryCache;
 
   beforeEach(() => {
     queryClient = new QueryClient();
-    queryCache = queryClient.getQueryCache();
     queryClient.mount();
   });
 
@@ -26,8 +24,10 @@ describe('RecipesList', () => {
         </BrowserRouter>
       </QueryClientProvider>,
     );
-    const contentElement = screen.getByText(/Recipes List/i);
-    expect(contentElement).toBeInTheDocument();
+    const headingElement = screen.getByRole('heading', {
+      name: /Recipes List/i,
+    });
+    expect(headingElement).toBeInTheDocument();
   });
 
   it('renders the recipes fetched', async () => {
@@ -75,5 +75,19 @@ describe('RecipesList', () => {
       name: /Delete/i,
     });
     expect(deleteButtons.length).toBe(mockRecipes.length);
+  });
+
+  it('renders the header "Create Recipe"', async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <RecipesList />,
+        </BrowserRouter>
+      </QueryClientProvider>,
+    );
+    const headingElement = screen.getByRole('heading', {
+      name: /Create Recipe/i,
+    });
+    expect(headingElement).toBeInTheDocument();
   });
 });
