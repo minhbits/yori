@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import useRecipe from '../hooks/useRecipe';
-import useUpdateRecipe from '../hooks/useUpdateRecipe';
-import RecipeForm from './RecipeForm';
+import useRecipe from '../../hooks/useRecipe';
+import useUpdateRecipe from '../../hooks/useUpdateRecipe';
+import RecipeForm from '../RecipeForm/RecipeForm';
 
 export default function Recipe() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -27,17 +27,13 @@ export default function Recipe() {
     status: updateRecipeStatus,
   } = useUpdateRecipe();
 
-  const onUpdateRecipe = () => {
-    updateRecipe({ recipeId, recipeData: values });
-  };
-
   return (
     <div>
       <RecipeForm
         label="Update Recipe"
         values={values}
         onChange={setValue}
-        onSubmit={onUpdateRecipe}
+        onSubmit={() => updateRecipe({ recipeId, recipeData: values })}
         submitText={
           updateRecipeStatus === 'loading'
             ? 'Updating...'
