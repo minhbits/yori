@@ -1,8 +1,8 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import RecipesList from './components/RecipesList';
-import Recipe from './components/Recipe';
+import RecipesList from './components/RecipesList/RecipesList';
+import Recipe from './components/Recipe/Recipe';
 import './App.css';
 
 export default function App() {
