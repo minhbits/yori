@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
@@ -16,21 +16,21 @@ describe('RecipesList', () => {
     queryClient.clear();
   });
 
+  const withProvider = (children: ReactElement) => (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{children}</BrowserRouter>
+    </QueryClientProvider>
+  );
+
   it('renders the header "Recipes List"', () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RecipesList />,
-        </BrowserRouter>
-      </QueryClientProvider>,
-    );
+    render(withProvider(<RecipesList />));
     const headingElement = screen.getByRole('heading', {
       name: /Recipes List/i,
     });
     expect(headingElement).toBeInTheDocument();
   });
 
-  it('renders the recipes fetched', async () => {
+  it('renders the recipes fetched', () => {
     const mockRecipes = [
       {
         attributes: { title: 'Awesome recipe' },
@@ -40,13 +40,7 @@ describe('RecipesList', () => {
     ];
     queryClient.setQueryData('recipes', mockRecipes);
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RecipesList />,
-        </BrowserRouter>
-      </QueryClientProvider>,
-    );
+    render(withProvider(<RecipesList />));
 
     mockRecipes.map((mockRecipe) =>
       expect(screen.getByText(mockRecipe.attributes.title)).toBeInTheDocument(),
@@ -63,13 +57,7 @@ describe('RecipesList', () => {
     ];
     queryClient.setQueryData('recipes', mockRecipes);
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RecipesList />,
-        </BrowserRouter>
-      </QueryClientProvider>,
-    );
+    render(withProvider(<RecipesList />));
 
     const deleteButtons = screen.getAllByRole('button', {
       name: /Delete/i,
@@ -77,14 +65,8 @@ describe('RecipesList', () => {
     expect(deleteButtons.length).toBe(mockRecipes.length);
   });
 
-  it('renders the header "Create Recipe"', async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RecipesList />,
-        </BrowserRouter>
-      </QueryClientProvider>,
-    );
+  it('renders the header "Create Recipe"', () => {
+    render(withProvider(<RecipesList />));
     const headingElement = screen.getByRole('heading', {
       name: /Create Recipe/i,
     });

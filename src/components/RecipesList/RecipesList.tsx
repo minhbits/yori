@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import useCreateRecipe from '../../hooks/useCreateRecipe';
 import useRecipes from '../../hooks/useRecipes';
 import useDeleteRecipe from '../../hooks/useDeleteRecipe';
-import RecipeForm from '../RecipeForm';
+import RecipeForm from '../RecipeForm/RecipeForm';
 import RecipeTypes from '../../global';
 
 export default function RecipesList() {
@@ -24,15 +24,7 @@ export default function RecipesList() {
     status: createRecipeStatus,
   } = useCreateRecipe();
 
-  const onCreateRecipe = () => {
-    createRecipe(values);
-  };
-
   const { mutate: deleteRecipe } = useDeleteRecipe();
-
-  const onDeleteRecipe = (recipeId: string) => {
-    deleteRecipe(recipeId);
-  };
 
   return (
     <div>
@@ -42,12 +34,7 @@ export default function RecipesList() {
           <Link to={`/recipes/${recipe.id}`}>
             <div>{recipe.attributes.title}</div>
           </Link>
-          <button
-            type="button"
-            onClick={() => {
-              onDeleteRecipe(recipe.id);
-            }}
-          >
+          <button type="button" onClick={() => deleteRecipe(recipe.id)}>
             Delete
           </button>
         </div>
@@ -57,7 +44,7 @@ export default function RecipesList() {
           label="Create Recipe"
           values={values}
           onChange={setValue}
-          onSubmit={onCreateRecipe}
+          onSubmit={() => createRecipe(values)}
           submitText={
             createRecipeStatus === 'loading'
               ? 'Saving...'
